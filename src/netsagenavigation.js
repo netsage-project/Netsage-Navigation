@@ -42,6 +42,10 @@ import './css/netsagenavigation_styles.css!';
 
 ////// place global variables here ////
 const panelDefaults = {
+  sidebar: true,
+  dashboardselection: true,
+  cycleview: true,
+  sharescreen: true,
   option_1: "netsage",
   option_2: "netsagenavigation",
   option_3: "plugin",
@@ -329,7 +333,69 @@ export class Netsagenavigation extends MetricsPanelCtrl {
       if (document.getElementById(ctrl.netsagenavigation_holder_id)) {
         ctrl.display();
 
-        RemoveGrafanaNav();
+
+
+        //NewCode 
+        var sideMenuBar = document.getElementsByTagName('sidemenu')[0];
+        var dashboardDropdown = document.getElementsByClassName('navbar-page-btn')[0];
+        var shareBtn = document.getElementsByClassName('navbar-button--share')[0];
+        var cycleBtn = document.getElementsByClassName('navbar-button--tv')[0];
+
+
+
+
+        // if (sideMenuBar.style.display != 'none') {
+        // sideMenuBar.style.display = 'none';
+        // }
+
+        //sidebar
+        if (sideMenuBar) {
+          if (ctrl.panel.sidebar) {
+            sideMenuBar.style.display = 'none';
+          } else {
+            sideMenuBar.style.display = 'block';
+
+          }
+        }
+
+        //dashboardDropdown
+        if (dashboardDropdown) {
+          if (ctrl.panel.dashboardselection) {
+            dashboardDropdown.style.display = 'none';
+          } else {
+            dashboardDropdown.style.display = 'block';
+
+          }
+        }
+
+        //sharebtn
+
+        if (shareBtn) {
+          if (ctrl.panel.sharescreen) {
+            shareBtn.style.display = 'none';
+          } else {
+
+            shareBtn.style.display = 'block';
+          }
+        }
+
+        //cycleBtn
+
+        if (cycleBtn) {
+          if (ctrl.panel.cycleview) {
+            cycleBtn.style.display = 'none';
+
+          } else {
+
+            cycleBtn.style.display = 'block';
+          }
+
+        }
+
+        //NewCode
+
+
+
         var currNavBar = window.parent.document.getElementById('menuItems');
         currNavBar.innerHTML = "";
 
@@ -364,13 +430,7 @@ export class Netsagenavigation extends MetricsPanelCtrl {
 }
 
 
-function RemoveGrafanaNav() {
-  var sideMenuBar = document.getElementsByTagName('sidemenu')[0];
-  if (sideMenuBar.style.display != 'none') {
-    sideMenuBar.style.display = 'none';
-  }
 
-}
 
 function CreateTopNavBar() {
   var grafanaApp = document.getElementsByTagName("grafana-app")[0];
