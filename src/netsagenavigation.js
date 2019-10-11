@@ -85,6 +85,8 @@ const panelDefaults = {
   custom_hover: ' '
 };
 
+
+
 var tempArray = [];
 
 
@@ -340,6 +342,7 @@ export class Netsagenavigation extends MetricsPanelCtrl {
         var dashboardDropdown = document.getElementsByClassName('navbar-page-btn')[0];
         var shareBtn = document.getElementsByClassName('navbar-button--share')[0];
         var cycleBtn = document.getElementsByClassName('navbar-button--tv')[0];
+
 
 
 
