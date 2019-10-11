@@ -3,18 +3,20 @@
     <div ng-repeat="x in ctrl.panel.choices track by $index">
         <div class="gf-form">
             <label class="gf-form-label">Display Question</label>
-            <input type="text" class="gf-form-input  ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="ctrl.panel.array_option_1[$index]">
-    
+            <input type="text" class="gf-form-input  ng-pristine ng-untouched ng-valid ng-not-empty"
+                ng-model="ctrl.panel.array_option_1[$index]">
+
             <label class="gf-form-label">URL</label>
-            <input type="text" class="gf-form-input  ng-pristine ng-untouched ng-valid ng-not-empty" ng-blur="ctrl.render()" ng-model="ctrl.panel.array_option_2[$index]">
-    
+            <input type="text" class="gf-form-input  ng-pristine ng-untouched ng-valid ng-not-empty"
+                ng-blur="ctrl.render()" ng-model="ctrl.panel.array_option_2[$index]">
+
             <div class="gf-form" ng-if="$last">
-              <button class="btn btn-inverse gf-form-btn" ng-click="ctrl.removeChoice($index)">-</button>
+                <button class="btn btn-inverse gf-form-btn" ng-click="ctrl.removeChoice($index)">-</button>
             </div>
         </div>
     </div>
     <button class="gf-form-input width-6" ng-click="ctrl.addNewChoice()">+</button>
-    <br/>
+    <br />
     <h5 class="section-heading">Logos</h5>
     <div class="gf-form">
         <label class="gf-form-label"> Top Bar Logo Path </label>
@@ -30,26 +32,22 @@
         <label class="gf-form-label"> Hamburger Path</label>
         <input type="text" class="gf-form-input" ng-model="ctrl.panel.hamburgerPath" ng-change="ctrl.render()">
     </div>
-    <br/>
+    <br />
 
     <h5 class="section-heading">Hide Grafana Tools </h5>
-    <gf-form-switch class="gf-form" label-class="width-8"
-        label="Sidebar"
-        checked="ctrl.panel.sidebar" on-change="ctrl.render()">
+    <gf-form-switch class="gf-form" label-class="width-8" label="Sidebar" checked="ctrl.panel.sidebar"
+        on-change="ctrl.render()">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label-class="width-8"
-    label="Share Screen"
-    checked="ctrl.panel.sharescreen" on-change="ctrl.render()">
-</gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-8" label="Share Screen" checked="ctrl.panel.sharescreen"
+        on-change="ctrl.render()">
+    </gf-form-switch>
 
-<gf-form-switch class="gf-form" label-class="width-8"
-label="Cycle view"
-checked="ctrl.panel.cycleview" on-change="ctrl.render()">
-</gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-8" label="Cycle view" checked="ctrl.panel.cycleview"
+        on-change="ctrl.render()">
+    </gf-form-switch>
 
 
-<gf-form-switch class="gf-form" label-class="width-10"
-label="Dashboard Selection"
-checked="ctrl.panel.dashboardselection" on-change="ctrl.render()">
-</gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-10" label="Dashboard Selection"
+        checked="ctrl.panel.dashboardselection" on-change="ctrl.render()">
+    </gf-form-switch>
 </div>
