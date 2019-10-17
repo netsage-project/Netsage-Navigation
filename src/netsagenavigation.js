@@ -21,15 +21,9 @@ limitations under the License.
 
 
 import {
-  MetricsPanelCtrl
+  PanelCtrl
 } from 'app/plugins/sdk';
 import _ from 'lodash';
-import {
-  Scale
-} from './scale';
-import {
-  CustomHover
-} from './CustomHover';
 import './css/netsagenavigation_styles.css!';
 
 
@@ -54,45 +48,10 @@ const panelDefaults = {
   array_option_1: [],
   array_option_2: [],
   array_option_3: [],
-  array_option_4: [],
-  parsed_data: [],
-  max_total: 0,
-  to_Byte: false,
-  color: {
-    mode: 'spectrum',
-    cardColor: '#b4ff00',
-    colorScale: 'linear',
-    exponent: 0.5,
-    colorScheme: 'interpolateOranges',
-    fillBackground: false
-  },
-  legend: {
-    show: true,
-    legend_colors: []
-  },
-  tooltip: {
-    show: true,
-    showDefault: true,
-    content: ' '
-  },
-  to_si: 1000000000,
-  scales: ['linear', 'sqrt'],
-  colorScheme: 'NetSage',
-  rgb_values: [],
-  hex_values: [],
-  //colorModes : ['opacity','spectrum'],
-  colorModes: ['spectrum'],
-  custom_hover: ' '
+  array_option_4: []
 };
 
-
-
-var tempArray = [];
-
-
-export class Netsagenavigation extends MetricsPanelCtrl {
-
-
+export class Netsagenavigation extends PanelCtrl {
 
   constructor($scope, $injector) {
     super($scope, $injector);
@@ -100,116 +59,14 @@ export class Netsagenavigation extends MetricsPanelCtrl {
     _.defaults(this.panel, panelDefaults);
     this.netsagenavigation_holder_id = 'netsagenavigation_' + this.panel.id;
     this.containerDivId = 'container_' + this.netsagenavigation_holder_id;
-    this.custom_hover = new CustomHover(this.panel.tooltip.content);
-    this.scale = new Scale(this.colorScheme);
-    this.colorSchemes = this.scale.getColorSchemes();
-    this.events.on('data-received', this.onDataReceived.bind(this));
-    this.events.on('data-error', this.onDataError.bind(this));
-    this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
+    
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
   }
 
-
-
-  onDataReceived(dataList) {
-    this.panel.parsed_data = [];
-    this.panel.max_total = 0;
-    this.process_data(dataList);
-    this.render();
-  }
-
-
-
-  process_data(dataList) {
-    /////////////////////////////////// IMPORTANT NOTE //////////////////////////////////////
-    //    datalist == results
-    //    each results have (target, datapoints[])
-    //    datapoints[0] == dataValue, datapoints[1] == epoch time dataValue was measured at
-    //
-    //    multiple queries get returned as one result.
-    /////////////////////////////////// IMPORTANT NOTE //////////////////////////////////////
-
-
-    ///////// your data processing code here /////////////
-    var self = this;
-    //update with the data!
-    _.forEach(dataList, function (data) {
-      var min;
-      var max;
-      var avg = 0;
-      var avg_count = 0;
-      var total;
-      var interval;
-      var label;
-
-      //get node label
-      label = data.target;
-
-      //find the last valid value
-      //find the min
-      //find the max
-      //find the average
-      //find the total datapoints
-      for (var i = (data.datapoints.length - 1); i >= 0; i--) {
-        var value = data.datapoints[i][0];
-        if (value !== undefined && value !== null) {
-          avg += value;
-          avg_count += 1;
-          if (min === undefined) {
-            min = value;
-            max = value;
-          }
-          if (value < min) {
-            min = value;
-          }
-          if (value > max) {
-            max = value;
-          }
-        }
-      }
-
-      //get total duration of data set
-      if (total > 1) {
-        var start = data.datapoints[0][1];
-        var end = data.datapoints[1][1];
-        interval = end - start;
-      }
-
-      //put all data into object then into array 
-      self.panel.parsed_data.push({
-        "min": min,
-        "max": max,
-        "avg": avg / avg_count,
-        "total": avg,
-        "interval": interval,
-        "label": label
-      });
-      if (avg > self.panel.max_total) {
-        self.panel.max_total = avg;
-      }
-
-    });
-    ///////// your data processing code here /////////////
-  }
-
-
-
-  onDataError(err) {
-    this.dataRaw = [];
-  }
-
-
-
   onInitEditMode() {
-    //this.addEditorTab('Options', 'public/plugins/netsagenavigation/editor.html', 2);
-    //this.addEditorTab('Display', 'public/plugins/netsagenavigation/display_editor.html', 3);
-    this.addEditorTab('Navigation', 'public/plugins/netsagenavigation/nav_editor.html', 3);
-    tempArray = this.scale.displayColor(this.panel.colorScheme);
-    this.render();
+    this.addEditorTab('Navigation', 'public/plugins/netsagenavigation/nav_editor.html', 3);      
   }
-
-
 
   onInitPanelActions(actions) {
     this.render();
@@ -233,80 +90,6 @@ export class Netsagenavigation extends MetricsPanelCtrl {
     this.panel.array_option_3.splice(index, 1);
     this.panel.array_option_4.splice(index, 1);
   }
-
-
-  display() {
-    this.panel.colors = this.scale.displayColor(this.panel.colorScheme);
-    this.panel.rgb_values = this.panel.colors.rgb_values;
-    this.panel.hex_values = this.panel.colors.hex_values;
-  }
-
-
-
-  getHtml(htmlContent) {
-    return this.custom_hover.parseHtml(htmlContent);
-    ///use in link///
-    //             let html_content = ctrl.getHtml(ctrl.panel.tooltip.content);
-    //             ctrl.panel.tooltip.content = html_content;
-  }
-
-  formatBytes(val) {
-    var hrFormat = null;
-    var factor = 1024.0
-    val = val / 8.0;
-
-    var b = val;
-    var k = val / factor;
-    var m = ((val / factor) / factor);
-    var g = (((val / factor) / factor) / factor);
-    var t = ((((val / factor) / factor) / factor) / factor);
-    var p = (((((val / factor) / factor) / factor) / factor) / factor);
-
-    if (p > 1) {
-      hrFormat = p.toFixed(2) + "(PB)";
-    } else if (t > 1) {
-      hrFormat = t.toFixed(2) + "(TB)";
-    } else if (g > 1) {
-      hrFormat = g.toFixed(2) + "(GB)";
-    } else if (m > 1) {
-      hrFormat = m.toFixed(2) + "(MB)";
-    } else if (k > 1) {
-      hrFormat = k.toFixed(2) + "(KB)";
-    } else {
-      hrFormat = b.toFixed(2) + "(Bytes)";
-    }
-
-    return hrFormat
-  }
-
-  formatBits(val) {
-    var hrFormat = null;
-    var factor = 1024.0
-
-    var b = val;
-    var k = val / factor;
-    var m = ((val / factor) / factor);
-    var g = (((val / factor) / factor) / factor);
-    var t = ((((val / factor) / factor) / factor) / factor);
-    var p = (((((val / factor) / factor) / factor) / factor) / factor);
-
-    if (p > 1) {
-      hrFormat = p.toFixed(2) + "(Pb)";
-    } else if (t > 1) {
-      hrFormat = t.toFixed(2) + "(Tb)";
-    } else if (g > 1) {
-      hrFormat = g.toFixed(2) + "(Gb)";
-    } else if (m > 1) {
-      hrFormat = m.toFixed(2) + "(Mb)";
-    } else if (k > 1) {
-      hrFormat = k.toFixed(2) + "(Kb)";
-    } else {
-      hrFormat = b.toFixed(2) + "(bits)";
-    }
-
-    return hrFormat
-  }
-
 
   navbarOpen() {
     document.getElementById("mySidenav").style.width = "420px";
@@ -333,23 +116,12 @@ export class Netsagenavigation extends MetricsPanelCtrl {
         }
       }
       if (document.getElementById(ctrl.netsagenavigation_holder_id)) {
-        ctrl.display();
-
-
 
         //NewCode 
         var sideMenuBar = document.getElementsByTagName('sidemenu')[0];
         var dashboardDropdown = document.getElementsByClassName('navbar-page-btn')[0];
         var shareBtn = document.getElementsByClassName('navbar-button--share')[0];
         var cycleBtn = document.getElementsByClassName('navbar-button--tv')[0];
-
-
-
-
-
-        // if (sideMenuBar.style.display != 'none') {
-        // sideMenuBar.style.display = 'none';
-        // }
 
         //sidebar
         if (sideMenuBar) {
@@ -372,7 +144,6 @@ export class Netsagenavigation extends MetricsPanelCtrl {
         }
 
         //sharebtn
-
         if (shareBtn) {
           if (ctrl.panel.sharescreen) {
             shareBtn.style.display = 'none';
@@ -383,7 +154,6 @@ export class Netsagenavigation extends MetricsPanelCtrl {
         }
 
         //cycleBtn
-
         if (cycleBtn) {
           if (ctrl.panel.cycleview) {
             cycleBtn.style.display = 'none';
@@ -428,6 +198,8 @@ export class Netsagenavigation extends MetricsPanelCtrl {
 
       }
     });
+
+      this.render();
   }
 
 }

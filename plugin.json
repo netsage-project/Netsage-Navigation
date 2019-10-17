@@ -2,6 +2,7 @@
   "type": "panel",
   "name": "Netsage Navigation",
   "id": "netsagenavigation",
+  "skipDataQuery": true,
 
   "info": {
     "description": "Netsage navigation plugin",
