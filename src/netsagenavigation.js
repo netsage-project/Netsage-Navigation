@@ -100,22 +100,21 @@ export class Netsagenavigation extends PanelCtrl {
   }
 
 
-  link(scope, elem, attrs, ctrl) {
-    var self = this;
-    ctrl.events.on('render', function () {
+  setup(){
+
       if (document.getElementsByTagName("body")) {
         var navItem = document.getElementById("NavBar");
         //Only create if nav doesnt exist.
         if (!navItem) {
           //This sets the logos 
-          var navBarLogoPath = ctrl.panel.topLogoPath;
-          var sideNavLogoPath = ctrl.panel.sideLogoPath;
-          var hamburgerPath = ctrl.panel.hamburgerPath;
+          var navBarLogoPath = this.panel.topLogoPath;
+          var sideNavLogoPath = this.panel.sideLogoPath;
+          var hamburgerPath = this.panel.hamburgerPath;
           CreateSideNavBar(navBarLogoPath, sideNavLogoPath, hamburgerPath);
           CreateTopNavBar();
         }
       }
-      if (document.getElementById(ctrl.netsagenavigation_holder_id)) {
+      if (document.getElementById(this.netsagenavigation_holder_id)) {
 
         //NewCode 
         var sideMenuBar = document.getElementsByTagName('sidemenu')[0];
@@ -125,7 +124,7 @@ export class Netsagenavigation extends PanelCtrl {
 
         //sidebar
         if (sideMenuBar) {
-          if (ctrl.panel.sidebar) {
+          if (this.panel.sidebar) {
             sideMenuBar.style.display = 'none';
           } else {
             sideMenuBar.style.display = 'block';
@@ -135,7 +134,7 @@ export class Netsagenavigation extends PanelCtrl {
 
         //dashboardDropdown
         if (dashboardDropdown) {
-          if (ctrl.panel.dashboardselection) {
+          if (this.panel.dashboardselection) {
             dashboardDropdown.style.display = 'none';
           } else {
             dashboardDropdown.style.display = 'block';
@@ -145,7 +144,7 @@ export class Netsagenavigation extends PanelCtrl {
 
         //sharebtn
         if (shareBtn) {
-          if (ctrl.panel.sharescreen) {
+          if (this.panel.sharescreen) {
             shareBtn.style.display = 'none';
           } else {
 
@@ -155,7 +154,7 @@ export class Netsagenavigation extends PanelCtrl {
 
         //cycleBtn
         if (cycleBtn) {
-          if (ctrl.panel.cycleview) {
+          if (this.panel.cycleview) {
             cycleBtn.style.display = 'none';
 
           } else {
@@ -174,11 +173,11 @@ export class Netsagenavigation extends PanelCtrl {
 
         var questions = [];
 
-        if (ctrl.panel.array_option_1.length > 0) {
-          for (var i = 0; i < ctrl.panel.array_option_1.length; i++) {
+        if (this.panel.array_option_1.length > 0) {
+          for (var i = 0; i < this.panel.array_option_1.length; i++) {
             var quesObj = {
-              "Question": ctrl.panel.array_option_1[i],
-              "Url": ctrl.panel.array_option_2[i]
+              "Question": this.panel.array_option_1[i],
+              "Url": this.panel.array_option_2[i]
             }
             questions.push(quesObj);
           }
@@ -195,14 +194,19 @@ export class Netsagenavigation extends PanelCtrl {
         })
 
 
-
       }
-    });
+  }
 
-      this.render();
+  link(scope, elem, attrs, ctrl) {
+    var self = this;
+    ctrl.events.on('render', self.setup.bind(self));
+    ctrl.events.on('refresh', self.setup.bind(self));
+
+    this.render();
   }
 
 }
+
 
 
 
@@ -211,9 +215,7 @@ function CreateTopNavBar() {
   var grafanaApp = document.getElementsByTagName("grafana-app")[0];
   var menuDiv = document.createElement("div");
   menuDiv.setAttribute("id", "NavBar");
-  grafanaApp.setAttribute("style", "margin-top:50px;");
   document.getElementsByTagName("body")[0].insertBefore(menuDiv, grafanaApp)
-
 }
 
 function CreateSideNavBar(toppath, sidepath, hamburgerPath) {
@@ -226,12 +228,14 @@ function CreateSideNavBar(toppath, sidepath, hamburgerPath) {
   sideBarHtml += "'mySidenav').style.width = "
   sideBarHtml += "'0px'"
   sideBarHtml += ';";">'
-  sideBarHtml += ' &times;</a><div id="menuItems" ><a href="https://portal.netsage.global/grafana/d/000000003/bandwidth-dashboard?refresh=1d&orgId=2">What is the current state of the network?</a><a href="https://portal.netsage.global/grafana/d/000000006/loss-patterns?orgId=2">What are the patterns of loss in the network?</a><a href="https://portal.netsage.global/grafana/d/000000005/latency-patterns?orgId=2">What are the latency patterns in the network?</a></div></div><span style="font-size:30px;cursor:pointer" '
+  sideBarHtml += ' &times;</a><div id="menuItems" ><a href="https://portal.netsage.global/grafana/d/000000003/bandwidth-dashboard?refresh=1d&orgId=2">What is the current state of the network?</a><a href="https://portal.netsage.global/grafana/d/000000006/loss-patterns?orgId=2">What are the patterns of loss in the network?</a><a href="https://portal.netsage.global/grafana/d/000000005/latency-patterns?orgId=2">What are the latency patterns in the network?</a></div></div><span style="font-size:30px;cursor:pointer;z-index:1021;" '
   sideBarHtml += 'onclick="document.getElementById('
   sideBarHtml += "'mySidenav').style.width = "
   sideBarHtml += "'420px'"
   sideBarHtml += ';";"><img src = "' + hamburgerPath + '" style = "width:45px;"> <img src="' + toppath + '" style= "width:200px; "></span>'
   var sideDiv = document.createElement("div");
+  sideDiv.style.display = 'flex';
+  sideDiv.style.zIndex  = '1021';
   sideDiv.setAttribute("id", "SideDiv");
   sideDiv.innerHTML = sideBarHtml;
   var grafanaApp = document.getElementsByTagName("grafana-app")[0];
