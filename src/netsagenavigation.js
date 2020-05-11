@@ -1,6 +1,6 @@
 /*
- * (C) 2018 Tyson Seto-Mook, Laboratory for Advanced Visualization and Applications, University of Hawaii at Manoa.
- */
+ * (C) 2018 Mahesh Khanal, Laboratory for Advanced Visualization and Applications, University of Hawaii at Manoa.
+*/
 
 
 /*
@@ -20,21 +20,15 @@ limitations under the License.
 */
 
 
+
+
 import {
   PanelCtrl
 } from 'app/plugins/sdk';
 import _ from 'lodash';
 import './css/netsagenavigation_styles.css!';
 
-
-//import './images/logo.png';
-
-//http://tokelau.manoa.hawaii.edu:3000/public/plugins/netsagenavigation/src/images/logo.png
-
-
-//import d3 from './js/netsagenavigation_d3.v3';
-
-////// place global variables here ////
+//Default panel options
 const panelDefaults = {
   sidebar: true,
   dashboardselection: true,
@@ -59,20 +53,23 @@ export class Netsagenavigation extends PanelCtrl {
     _.defaults(this.panel, panelDefaults);
     this.netsagenavigation_holder_id = 'netsagenavigation_' + this.panel.id;
     this.containerDivId = 'container_' + this.netsagenavigation_holder_id;
-    
+
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
   }
 
   onInitEditMode() {
-    this.addEditorTab('Navigation', 'public/plugins/netsagenavigation/nav_editor.html', 3);      
+    this.addEditorTab('Navigation', 'public/plugins/netsagenavigation/nav_editor.html', 3);
   }
 
   onInitPanelActions(actions) {
     this.render();
   }
 
-
+  /**
+       * A method to  add new navigation URL in the edit panel 
+       * @method addNewChoice
+  */
   addNewChoice() {
     var num = this.panel.choices.length + 1;
     this.panel.choices.push(num);
@@ -82,6 +79,11 @@ export class Netsagenavigation extends PanelCtrl {
     this.panel.array_option_4.push('');
   }
 
+  /**
+      * A method the remove the choice option in the edit panel 
+      * @method removeChoice
+      * @param {BigInteger} index index of the array to be removed
+ */
 
   removeChoice(index) {
     this.panel.choices.splice(index, 1);
@@ -90,94 +92,66 @@ export class Netsagenavigation extends PanelCtrl {
     this.panel.array_option_3.splice(index, 1);
     this.panel.array_option_4.splice(index, 1);
   }
-
+  /**
+      * A method to  show the navbar
+      * @method navbarOpen
+ */
   navbarOpen() {
     document.getElementById("mySidenav").style.width = "420px";
   }
 
+  /**
+      * A method to  hide the navbar
+      * @method navbarClose
+ */
   navbarClose() {
     document.getElementById("mySidenav").style.width = "0px";
   }
 
-
-  setup(){
-
-      if (document.getElementsByTagName("body")) {
-        var navItem = document.getElementById("NavBar");
-        //Only create if nav doesnt exist.
-        if (!navItem) {
-          //This sets the logos 
-          var navBarLogoPath = this.panel.topLogoPath;
-          var sideNavLogoPath = this.panel.sideLogoPath;
-          var hamburgerPath = this.panel.hamburgerPath;
-          CreateSideNavBar(navBarLogoPath, sideNavLogoPath, hamburgerPath);
-          CreateTopNavBar();
-        }
+  /**
+      * A method to  start the setup of the plugin
+      * @method setup
+ */
+  setup() {
+    if (document.getElementsByTagName("body")) {
+      var navItem = document.getElementById("NavBar");
+      //Only create if nav doesnt exist.
+      if (!navItem) {
+        //This sets the logos 
+        var navBarLogoPath = this.panel.topLogoPath;
+        var sideNavLogoPath = this.panel.sideLogoPath;
+        var hamburgerPath = this.panel.hamburgerPath;
+        //creates side Navigation Bar
+        CreateSideNavBar(navBarLogoPath, sideNavLogoPath, hamburgerPath);
+        //Creates top Navigation Bar
+        CreateTopNavBar();
       }
-      if (document.getElementById(this.netsagenavigation_holder_id)) {
-
-        //NewCode 
-        var sideMenuBar = document.getElementsByTagName('sidemenu')[0];
-        var dashboardDropdown = document.getElementsByClassName('navbar-page-btn')[0];
-        var shareBtn = document.getElementsByClassName('navbar-button--share')[0];
-        var cycleBtn = document.getElementsByClassName('navbar-button--tv')[0];
-
-        //sidebar
-        if (sideMenuBar) {
-          if (this.panel.sidebar) {
-            sideMenuBar.style.display = 'none';
-          } else {
-            sideMenuBar.style.display = 'block';
-
-          }
-        }
-
-        //dashboardDropdown
-        if (dashboardDropdown) {
-          if (this.panel.dashboardselection) {
-            dashboardDropdown.style.display = 'none';
-          } else {
-            dashboardDropdown.style.display = 'block';
-
-          }
-        }
-
-        //sharebtn
-        if (shareBtn) {
-          if (this.panel.sharescreen) {
-            shareBtn.style.display = 'none';
-          } else {
-
-            shareBtn.style.display = 'block';
-          }
-        }
-
-        //cycleBtn
-        if (cycleBtn) {
-          if (this.panel.cycleview) {
-            cycleBtn.style.display = 'none';
-
-          } else {
-
-            cycleBtn.style.display = 'block';
-          }
-
-        }
-
-        //NewCode
+    }
+    if (document.getElementById(this.netsagenavigation_holder_id)) {
+      //Hides/shows default grafana buttons and options
+      HandleGrafanaDefaults(this);
+      //Updates the side navigation menu based on the user options. 
+      UpdateMenu(this);
 
 
+      /**
+           * A method to  update the url in the side menu based on user preference
+           * @method UpdateMenu
+           * @param {Object} ctrl the panel control
+      */
+
+      function UpdateMenu(ctrl) {
 
         var currNavBar = window.parent.document.getElementById('menuItems');
         currNavBar.innerHTML = "";
 
         var questions = [];
 
-        if (this.panel.array_option_1.length > 0) {
-          for (var i = 0; i < this.panel.array_option_1.length; i++) {
+        if (ctrl.panel.array_option_1.length > 0) {
+          for (var i = 0; i < ctrl.panel.array_option_1.length; i++) {
             var quesObj = {
-              "Question": this.panel.array_option_1[i],
-              "Url": this.panel.array_option_2[i]
+              "Question": ctrl.panel.array_option_1[i],
+              "Url": ctrl.panel.array_option_2[i]
             }
             questions.push(quesObj);
           }
@@ -193,8 +167,97 @@ export class Netsagenavigation extends PanelCtrl {
           currNavBar.appendChild(aTag);
         })
 
+      }
+
+      /**
+           * A method to  show/hide different grafana options
+           * @method HandleGrafanaDefaults
+           * @param {Object} ctrl the panel control
+      */
+
+      function HandleGrafanaDefaults(ctrl) {
+        HandleSideMenu(ctrl);
+        HandleDropDown(ctrl);
+        HandleShareButton(ctrl);
+        HandleCycleButton(ctrl);
+      }
+
+      /**
+           * A method to  show/hide the side navigation menu in grafana
+           * @method HandleSideMenu
+           * @param {Object} ctrl the panel control
+      */
+
+      function HandleSideMenu(ctrl) {
+        var sideMenuBar = document.getElementsByTagName('sidemenu')[0];
+        if (sideMenuBar) {
+          if (ctrl.panel.sidebar) {
+            sideMenuBar.style.display = 'none';
+          } else {
+            sideMenuBar.style.display = 'block';
+
+          }
+        }
+      }
+
+      /**
+           * A method to  show/hide the default dropdown in grafana
+           * @method HandleDropDown
+           * @param {Object} ctrl the panel control
+      */
+
+      function HandleDropDown(ctrl) {
+        var dashboardDropdown = document.getElementsByClassName('navbar-page-btn')[0];
+        if (dashboardDropdown) {
+          if (ctrl.panel.dashboardselection) {
+            dashboardDropdown.style.display = 'none';
+          } else {
+            dashboardDropdown.style.display = 'block';
+
+          }
+        }
 
       }
+
+      /**
+           * A method to  show/hide the default share button in grafana
+           * @method HandleShareButton
+           * @param {Object} ctrl the panel control
+      */
+
+      function HandleShareButton(ctrl) {
+        var shareBtn = document.getElementsByClassName('navbar-button--share')[0];
+        if (shareBtn) {
+          if (ctrl.panel.sharescreen) {
+            shareBtn.style.display = 'none';
+          } else {
+
+            shareBtn.style.display = 'block';
+          }
+        }
+      }
+
+      /**
+           * A method to show/hide the default cycle button in grafana
+           * @method HandleCycleButton
+           * @param {Object} ctrl the panel control
+      */
+
+      function HandleCycleButton(ctrl) {
+        var cycleBtn = document.getElementsByClassName('navbar-button--tv')[0];
+        if (cycleBtn) {
+          if (ctrl.panel.cycleview) {
+            cycleBtn.style.display = 'none';
+
+          } else {
+
+            cycleBtn.style.display = 'block';
+          }
+
+        }
+      }
+
+    }
   }
 
   link(scope, elem, attrs, ctrl) {
@@ -206,17 +269,26 @@ export class Netsagenavigation extends PanelCtrl {
   }
 
 }
-
-
-
-
-
+/**
+     * A method to  create the Top navigation bar
+     * @method CreateTopNavBar
+  
+*/
 function CreateTopNavBar() {
   var grafanaApp = document.getElementsByTagName("grafana-app")[0];
   var menuDiv = document.createElement("div");
   menuDiv.setAttribute("id", "NavBar");
   document.getElementsByTagName("body")[0].insertBefore(menuDiv, grafanaApp)
 }
+
+/**
+     * A method to  create the side navigation panel
+     * @method CreateSideNavBar
+     * @param {String} toppath the path of the logo for top navigation bar
+     * @param {String} sidepath the path of the logo for side navigation bar
+     * @param {String} hamburgerPath the path of the logo for the hamburgerlogo
+*/
+
 
 function CreateSideNavBar(toppath, sidepath, hamburgerPath) {
   console.log(toppath, sidepath);
@@ -235,7 +307,7 @@ function CreateSideNavBar(toppath, sidepath, hamburgerPath) {
   sideBarHtml += ';";"><img src = "' + hamburgerPath + '" style = "width:45px;"> <img src="' + toppath + '" style= "width:200px; "></span>'
   var sideDiv = document.createElement("div");
   sideDiv.style.display = 'flex';
-  sideDiv.style.zIndex  = '1021';
+  sideDiv.style.zIndex = '1021';
   sideDiv.setAttribute("id", "SideDiv");
   sideDiv.innerHTML = sideBarHtml;
   var grafanaApp = document.getElementsByTagName("grafana-app")[0];
