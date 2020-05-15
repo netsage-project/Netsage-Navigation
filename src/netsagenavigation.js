@@ -34,6 +34,7 @@ const panelDefaults = {
   dashboardselection: true,
   cycleview: true,
   sharescreen: true,
+  tablefilters:true,
   option_1: "netsage",
   option_2: "netsagenavigation",
   option_3: "plugin",
@@ -180,6 +181,7 @@ export class Netsagenavigation extends PanelCtrl {
         HandleDropDown(ctrl);
         HandleShareButton(ctrl);
         HandleCycleButton(ctrl);
+        HandleTableFilters(ctrl); 
       }
 
       /**
@@ -199,6 +201,34 @@ export class Netsagenavigation extends PanelCtrl {
           }
         }
       }
+
+      /**
+           * A method to  show/hide the side navigation menu in grafana
+           * @method HandleSideMenu
+           * @param {Object} ctrl the panel control
+      */
+
+     function HandleTableFilters(ctrl) {
+       var filters =  document.getElementsByClassName('table-panel-filter-link'); 
+       var hiddenCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: hidden !important;}'; 
+       var visibleCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: visible !important;}'; 
+       var style = document.createElement('style'); 
+       if (ctrl.panel.tablefilters) {
+        if (style.styleSheet) {
+          style.styleSheet.cssText = hiddenCss;
+        } else {
+          style.appendChild(document.createTextNode(hiddenCss));
+        }
+      
+        }else{
+          if (style.styleSheet) {
+            style.styleSheet.cssText = visibleCss;
+        } else {
+            style.appendChild(document.createTextNode(visibleCss));
+      }
+    }
+      document.getElementsByTagName('head')[0].appendChild(style);
+  }
 
       /**
            * A method to  show/hide the default dropdown in grafana
