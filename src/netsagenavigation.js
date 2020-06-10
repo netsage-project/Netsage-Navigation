@@ -34,7 +34,8 @@ const panelDefaults = {
   dashboardselection: true,
   cycleview: true,
   sharescreen: true,
-  tablefilters:true,
+  tablefilters: true,
+  grafanafavorites: true,
   option_1: "netsage",
   option_2: "netsagenavigation",
   option_3: "plugin",
@@ -181,7 +182,29 @@ export class Netsagenavigation extends PanelCtrl {
         HandleDropDown(ctrl);
         HandleShareButton(ctrl);
         HandleCycleButton(ctrl);
-        HandleTableFilters(ctrl); 
+        HandleTableFilters(ctrl);
+        HandleGrafanaFavorites(ctrl);
+      }
+
+      /**
+         * A method to  show/hide the default share button in grafana
+         * @method HandleGrafanaFavorites
+         * @param {Object} ctrl the panel control
+    */
+
+      function HandleGrafanaFavorites(ctrl) {
+        var container = document.getElementsByClassName('css-rwrh9q');
+        if (container) {
+          if (ctrl.panel.grafanafavorites) {
+            for (var i = 0; i < container.length; i++) {
+              container[i].style.display = 'none';
+            }
+          }
+        } else {
+          for (var i = 0; i < container.length; i++) {
+            container[i].style.display = 'flex';
+          }
+        }
       }
 
       /**
@@ -208,27 +231,27 @@ export class Netsagenavigation extends PanelCtrl {
            * @param {Object} ctrl the panel control
       */
 
-     function HandleTableFilters(ctrl) {
-       var filters =  document.getElementsByClassName('table-panel-filter-link'); 
-       var hiddenCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: hidden !important;}'; 
-       var visibleCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: visible !important;}'; 
-       var style = document.createElement('style'); 
-       if (ctrl.panel.tablefilters) {
-        if (style.styleSheet) {
-          style.styleSheet.cssText = hiddenCss;
+      function HandleTableFilters(ctrl) {
+        var filters = document.getElementsByClassName('table-panel-filter-link');
+        var hiddenCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: hidden !important;}';
+        var visibleCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: visible !important;}';
+        var style = document.createElement('style');
+        if (ctrl.panel.tablefilters) {
+          if (style.styleSheet) {
+            style.styleSheet.cssText = hiddenCss;
+          } else {
+            style.appendChild(document.createTextNode(hiddenCss));
+          }
+
         } else {
-          style.appendChild(document.createTextNode(hiddenCss));
-        }
-      
-        }else{
           if (style.styleSheet) {
             style.styleSheet.cssText = visibleCss;
-        } else {
+          } else {
             style.appendChild(document.createTextNode(visibleCss));
+          }
+        }
+        document.getElementsByTagName('head')[0].appendChild(style);
       }
-    }
-      document.getElementsByTagName('head')[0].appendChild(style);
-  }
 
       /**
            * A method to  show/hide the default dropdown in grafana
