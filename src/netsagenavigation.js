@@ -232,9 +232,8 @@ export class Netsagenavigation extends PanelCtrl {
       */
 
       function HandleTableFilters(ctrl) {
-        var filters = document.getElementsByClassName('table-panel-filter-link');
-        var hiddenCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: hidden !important;}';
-        var visibleCss = '.table-panel-table td:hover .table-panel-filter-link { visibility: visible !important;}';
+        var hiddenCss = '[class$="filterWrapper"] { display: none !important; }'; 
+        var visibleCss = '[class$="filterWrapper"] { display: inline-block !important; }'; 
         var style = document.createElement('style');
         if (ctrl.panel.tablefilters) {
           if (style.styleSheet) {
