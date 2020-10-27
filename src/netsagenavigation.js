@@ -20,8 +20,6 @@ limitations under the License.
 */
 
 
-
-
 import {
   PanelCtrl
 } from 'app/plugins/sdk';
@@ -36,15 +34,9 @@ const panelDefaults = {
   sharescreen: true,
   tablefilters: true,
   grafanafavorites: true,
-  option_1: "netsage",
-  option_2: "netsagenavigation",
-  option_3: "plugin",
-  option_4: 123,
   choices: [],
-  array_option_1: [],
-  array_option_2: [],
-  array_option_3: [],
-  array_option_4: []
+  link_text: [],
+  link_url: [],
 };
 
 export class Netsagenavigation extends PanelCtrl {
@@ -75,10 +67,10 @@ export class Netsagenavigation extends PanelCtrl {
   addNewChoice() {
     var num = this.panel.choices.length + 1;
     this.panel.choices.push(num);
-    this.panel.array_option_1.push('');
-    this.panel.array_option_2.push('');
-    this.panel.array_option_3.push('');
-    this.panel.array_option_4.push('');
+    this.panel.link_text.push('');
+    this.panel.link_url.push('');
+    //this.panel.array_option_3.push('');
+    //this.panel.array_option_4.push('');
   }
 
   /**
@@ -89,10 +81,10 @@ export class Netsagenavigation extends PanelCtrl {
 
   removeChoice(index) {
     this.panel.choices.splice(index, 1);
-    this.panel.array_option_1.splice(index, 1);
-    this.panel.array_option_2.splice(index, 1);
-    this.panel.array_option_3.splice(index, 1);
-    this.panel.array_option_4.splice(index, 1);
+    this.panel.link_text.splice(index, 1);
+    this.panel.link_url.splice(index, 1);
+    //this.panel.array_option_3.splice(index, 1);
+   //this.panel.array_option_4.splice(index, 1);
   }
   /**
       * A method to  show the navbar
@@ -149,11 +141,11 @@ export class Netsagenavigation extends PanelCtrl {
 
         var questions = [];
 
-        if (ctrl.panel.array_option_1.length > 0) {
-          for (var i = 0; i < ctrl.panel.array_option_1.length; i++) {
+        if (ctrl.panel.link_text.length > 0) {
+          for (var i = 0; i < ctrl.panel.link_text.length; i++) {
             var quesObj = {
-              "Question": ctrl.panel.array_option_1[i],
-              "Url": ctrl.panel.array_option_2[i]
+              "Question": ctrl.panel.link_text[i],
+              "Url": ctrl.panel.link_url[i]
             }
             questions.push(quesObj);
           }
