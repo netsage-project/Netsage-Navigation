@@ -63,7 +63,7 @@ export const SimplePanel: React.FC<any> = ({ options , data, width, height }) =>
 };
 
 const handleSideNavVisibility = (hideSideBar: boolean) => {
-  handleElementSelectedFromClass(hideSideBar, "css-105dyb7");
+  handleElementSelectedFromClass(hideSideBar, "sidemenu");
 }
 
 const handleNavBarVisibility = (hideNavBar: boolean) => {
