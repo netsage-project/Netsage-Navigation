@@ -1,18 +1,35 @@
-# netsage-boilerplate-grafana-plugin
-A granfana plugin boilerplate for netsage 
+# NetSage Navigation Plugin
 
-# Rename Boilerplate Plugin
-1. update `FULL_NAME` and `SHORT_NAME` in `Makefile`
-2. run `make name_change`
-3. update `PREV_FULL_NAME` and `PREV_SHORT_NAME` in `Makefile` to match current plugin name
+This is the customizable navigation plugin for NetSage project. 
 
-# Other Useful Makefile targets
-- `build` - runs gulp to build grafana plugin
-- `reload` - restarts grafana server to load plugin (needs root/sudo privileges to complete)
-- `install` - builds, installs plugin and reloads grafana server
+## Getting started
 
-# !! IMPORTANT NOTE !!
-Makefile `install` target only tested on Fedora release 25
-edit makefile for your system
+1. Install dependencies
 
+   ```bash
+   yarn install
+   ```
 
+2. Build plugin in development mode or run in watch mode
+
+   ```bash
+   yarn dev
+   ```
+
+   or
+
+   ```bash
+   yarn watch
+   ```
+
+3. Build plugin in production mode
+
+   ```bash
+   yarn build
+   ```
+
+## Testing the plugin in standalon mode
+
+   ```bash
+   docker run -p 3001:3000 -v $pwd:/var/lib/grafana/plugins -e GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS='netsage-nav-plugin' --name=grafana-plugins grafana/grafana:8.2.3
+   ```
