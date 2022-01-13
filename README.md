@@ -28,7 +28,7 @@ This is the customizable navigation plugin for NetSage project.
    yarn build
    ```
 
-## Testing the plugin in standalon mode
+## Testing the plugin in standalone mode
 
    ```bash
    docker run -p 3001:3000 -v $PWD:/var/lib/grafana/plugins/netsage-nav-plugin -e GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS='netsage-nav-plugin' --name=grafana-plugins grafana/grafana:8.2.3
