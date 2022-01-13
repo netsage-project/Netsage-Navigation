@@ -1,10 +1,9 @@
 import { PanelPlugin } from '@grafana/data';
-import { SimpleOptions } from './types';
 import { SimplePanel } from './SimplePanel';
 import { NavQuestionEditor } from './NavQuestionEditor';
 import { HideGrafanaTools } from './HideGrafanaTools';
 
-export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions(builder => {
+export const plugin = new PanelPlugin<any>(SimplePanel).setPanelOptions(builder => {
   return builder
     .addCustomEditor({
       id: 'navQuestions',

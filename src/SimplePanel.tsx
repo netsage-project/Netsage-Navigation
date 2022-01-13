@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { PanelProps } from '@grafana/data';
-import { SimpleOptions } from 'types';
 import { css, cx } from 'emotion';
 import { stylesFactory } from '@grafana/ui';
 import './css/styles.css';
 import ReactDOM from 'react-dom';
-// https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sidenav_push
+// Inspired by https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sidenav_push
 
 
-interface Props extends PanelProps<SimpleOptions> {}
-
-class NavComponent extends Component {
+interface NavProps {
+  navData:  Array<{label: string, link: string}>
+}
+class NavComponent extends Component<NavProps> {
   render() {
     const styles = getStyles();
     const navImg = require('./img/hamburger-v4.gif');
@@ -43,8 +42,7 @@ class NavComponent extends Component {
   }
 }
 
-
-export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
+export const SimplePanel: React.FC<any> = ({ options , data, width, height }) => {
   const styles = getStyles();
   console.log(options);
 
@@ -76,16 +74,16 @@ const handleNavBarVisibility = (hideNavBar: boolean) => {
 }
 
 const handleElementSelectedFromClass = (doHide: boolean, className: string) => {
-  var container = document.getElementsByClassName(className);
+  var container = Array.from(document.getElementsByClassName(className) as HTMLCollectionOf<HTMLElement>);
   if (container) {
     if (doHide) {
       for (var i = 0; i < container.length; i++) {
         container[i].style.display = 'none';
       }
-    }
-  } else {
-    for (i = 0; i < container.length; i++) {
-      container[i].style.display = 'flex';
+    } else {
+      for (i = 0; i < container.length; i++) {
+        container[i].style.display = 'flex';
+      }
     }
   }
 }

@@ -31,5 +31,5 @@ This is the customizable navigation plugin for NetSage project.
 ## Testing the plugin in standalon mode
 
    ```bash
-   docker run -p 3001:3000 -v $pwd:/var/lib/grafana/plugins -e GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS='netsage-nav-plugin' --name=grafana-plugins grafana/grafana:8.2.3
+   docker run -p 3001:3000 -v $PWD:/var/lib/grafana/plugins/netsage-nav-plugin -e GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS='netsage-nav-plugin' --name=grafana-plugins grafana/grafana:8.2.3
    ```
