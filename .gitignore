@@ -1,4 +1,7 @@
+node_modules
+.DS_Store
+dist
+.idea
 package-lock.json
 yarn.lock
-/node_modules
-/dist
+coverage/
